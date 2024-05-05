@@ -1,10 +1,12 @@
+from functools import lru_cache
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 import base64
-
 matplotlib.use('Agg')
+
+
 
 
 df = pd.read_csv('my_data.csv')
@@ -156,7 +158,6 @@ plot_keywords = {
 
 
     
-
 def parseQuery(query):
     features = {}
     relations = {}
@@ -176,13 +177,13 @@ def parseQuery(query):
 
     return features, relations
 
-
 def boxplot(features):
   f1 = ''
   for x in features.keys():
     f1 = x
 
   x = df[f1].values.tolist()
+  print(x)
   plt.boxplot(x)
   plt.xlabel(f1)
   plt.title("Box Plot of {}".format(f1))
@@ -191,6 +192,7 @@ def boxplot(features):
       image_data = image_file.read()
   base64_encoded_data = base64.b64encode(image_data).decode('utf-8')
   return base64_encoded_data  
+
 
 def plotRatio(features):
     f1, f2 = "", ""
@@ -214,6 +216,7 @@ def plotRatio(features):
         nume = f2
         deno = f1
     ratio = df[nume] / df[deno]
+    print(ratio)
     print(ratio.values.tolist())
     x = [i for i in range(1, len(ratio) + 1)]
     plt.plot(x, ratio.values.tolist())
@@ -225,7 +228,6 @@ def plotRatio(features):
         image_data = image_file.read()
     base64_encoded_data = base64.b64encode(image_data).decode("utf-8")
     return base64_encoded_data
-
 
 def plotScatter(features):
     f1, f2 = "", ""
@@ -265,7 +267,6 @@ def lineplot(features):
   base64_encoded_data = base64.b64encode(image_data).decode('utf-8')
   return base64_encoded_data
 
-
 def histogram(features):
   f1 = ''
   for x in features.keys():
@@ -281,9 +282,10 @@ def histogram(features):
   base64_encoded_data = base64.b64encode(image_data).decode('utf-8')
   return base64_encoded_data  
 
-
-
 def getPlot(features,relations):
+    val = ''
+    for key in relations.keys():
+        val = key
     if len(relations)==0:
         if len(features)==1:
             return histogram(features)
@@ -291,9 +293,6 @@ def getPlot(features,relations):
             return lineplot(features)
         else:
             return ""
-    val = ''
-    for key in relations.keys():
-        val = key
     if val=='line plot':
         if len(features)!=2:
             return ""
